@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Code barre livret generator</title>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.5.4/JsBarcode.all.js"></script>
+    
+    <style type="text/css">
+        body {
+            background: #fff;
+        }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-around;
+        }
+        .product {
+            text-align:center;
+            border: 1px solid #000;
+            margin-top: 3em;
+            padding: 1em;
+        }
+        .product h2 {
+            width: 300px;
+        }
+        .product img {
+            max-height: 200px;
+            max-width: 200px;
+        }
+    </style>
+
+    <script type='text/javascript'>//<![CDATA[
+        window.onload = function() {
+            function ready(fn) {
+                if (document.readyState != 'loading') {
+                    fn();
+                } else {
+                    document.addEventListener('DOMContentLoaded', fn);
+                }
+            }
+
+            function displayProduct(product) {
+                var image = product.image
+                    ? `<img src="data:image/png;base64,${product.image}" title="${product.name}" />`
+                    : ``
+                
+                var barcode = `<svg class="barcode"
+                    jsbarcode-format="ean${product.barcode.length}"
+                    jsbarcode-value="${product.barcode}"
+                    jsbarcode-textmargin="0"
+                    jsbarcode-fontoptions="bold">
+                </svg>`
+
+                return `
+                    <div class="product">
+                        <h2>${product.name}</h2>
+                        ${image}
+                        <br>${barcode}
+                    </div>`
+            }
+
+            function displayProductSection(letter, products) {
+                return `<h1>${letter}</h1>
+                    <div class="products">
+                        ${products.map(displayProduct).join("\n")}
+                    </div>`
+            }
+
+            function displayProducts(products) {
+                var productsByLetter = products
+                    .filter(function(product) { return product.name })
+                    .filter(function(product) { return product.barcode })
+                    .reduce(function(byLetter, product) {
+                        var letter = product.name[0]
+                        if (!byLetter.hasOwnProperty(letter)) {
+                            byLetter[letter] = []
+                        }
+                        byLetter[letter].push(product)
+                        return byLetter
+                    }, {})
+
+                document.getElementById('products-result').innerHTML = Object.keys(productsByLetter)
+                    .map(function(letter) {
+                        return displayProductSection(letter, productsByLetter[letter])
+                    }).join("\n")
+                JsBarcode(".barcode").init();
+            }
+
+            ready(function() {
+                var handleCsvUpload = function (event) {
+                    var reader = new FileReader()
+                    var file = event.target.files[0]
+
+                    document.getElementById('products-result').innerHTML = '... chargement en cours !'
+                    reader.onload = function() {
+                        var csvData = Papa.parse(this.result, {
+                            header: true
+                        })
+                        if (csvData.errors.length) {
+                            console.warn(csvData.errors.join("\n"))
+                        }
+                        displayProducts(csvData.data)
+                    }
+                    reader.readAsText(file, 'UTF-8');
+                }
+
+                var fileInputElement = document.getElementById('products')
+                fileInputElement.onchange = handleCsvUpload
+            })
+        }//]]> 
+    </script>
+</head>
+
+<body>
+    <input type="file" name="products" id="products" />
+    <div id="products-result" class="wrapper">
+        ... Envoyez un fichier d'abord !
+    </div>
+</body>
+
+</html>
