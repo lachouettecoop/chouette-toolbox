@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Code barre generator</title>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.5.4/JsBarcode.all.js"></script>
+    
+    <style type="text/css">
+        body {
+            background: #fff;
+        }
+    </style>
+
+    <script type='text/javascript'>//<![CDATA[
+        window.onload = function() {
+            function ready(fn) {
+                if (document.readyState != 'loading') {
+                    fn();
+                } else {
+                    document.addEventListener('DOMContentLoaded', fn);
+                }
+            }
+
+            function checksumOf(base) {
+                return '2' // TODO Calculate me
+            }
+
+            function displayBarcode() {
+                var base = `20${parseInt(Date.now() / 1000)}`
+                var checksum = checksumOf(base)
+                var barcode = `<svg class="barcode"
+                    jsbarcode-format="ean13"
+                    jsbarcode-value="${base}${checksum}"
+                    jsbarcode-textmargin="0"
+                    jsbarcode-fontoptions="bold">
+                </svg>`
+
+                return `
+                    <p>${barcode}</p>
+                    <p>${base}${checksum}</p>
+                `
+            }
+
+            ready(function() {
+                document.getElementById('content').innerHTML = displayBarcode()
+                JsBarcode(".barcode").init();
+            })
+        }//]]> 
+    </script>
+</head>
+
+<body>
+    <div id="content">
+        ... Génération du code barre en cours
+    </div>
+</body>
+
+</html>
