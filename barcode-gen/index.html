@@ -5,11 +5,11 @@
     <title>Code barre generator</title>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.5.4/JsBarcode.all.js"></script>
-    
+
     <style type="text/css">
-        body {
-            background: #fff;
-        }
+    body {
+        background: #fff;
+    }
     </style>
 
     <script type='text/javascript'>//<![CDATA[
@@ -21,24 +21,38 @@
                     document.addEventListener('DOMContentLoaded', fn);
                 }
             }
+            
+            String.prototype.reverse = function()
+            {
+                splitext = this.split("");
+                revertext = splitext.reverse();
+                reversed = revertext.join("");
+                return reversed;
+            }
 
-            function checksumOf(base) {
-                return '2' // TODO Calculate me
+            function checksumOf(s) {
+                var result = 0;
+            	var rs = s.reverse();
+            	for (counter = 0; counter < rs.length; counter++)
+            	{
+            		result = result + parseInt(rs.charAt(counter)) * Math.pow(3, ((counter+1) % 2));
+            	}
+            	return (10 - (result % 10)) % 10;
             }
 
             function displayBarcode() {
                 var base = `20${parseInt(Date.now() / 1000)}`
                 var checksum = checksumOf(base)
                 var barcode = `<svg class="barcode"
-                    jsbarcode-format="ean13"
-                    jsbarcode-value="${base}${checksum}"
-                    jsbarcode-textmargin="0"
-                    jsbarcode-fontoptions="bold">
+                jsbarcode-format="ean13"
+                jsbarcode-value="${base}${checksum}"
+                jsbarcode-textmargin="0"
+                jsbarcode-fontoptions="bold">
                 </svg>`
 
                 return `
-                    <p>${barcode}</p>
-                    <p>${base}${checksum}</p>
+                <p>${barcode}</p>
+                <p>${base}${checksum}</p>
                 `
             }
 
@@ -46,14 +60,14 @@
                 document.getElementById('content').innerHTML = displayBarcode()
                 JsBarcode(".barcode").init();
             })
-        }//]]> 
-    </script>
-</head>
+        }//]]>
+        </script>
+    </head>
 
-<body>
-    <div id="content">
-        ... Génération du code barre en cours
-    </div>
-</body>
+    <body>
+        <div id="content">
+            ... Génération du code barre en cours
+        </div>
+    </body>
 
-</html>
+    </html>
