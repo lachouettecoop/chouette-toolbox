@@ -2,6 +2,8 @@
 
 Ce projet contient différents outils / prototypes pour "[La chouette coop](http://lachouettecoop.fr/)".
 
+* Générateur de feuille imprimable de codes-barres des produits : https://lachouettecoop.github.io/chouette-toolbox/barcodes/ 
+
 *Pour rejoindre l'aventure au sein du groupe informatique contactez moi ou
 utilisez le site !*
 
