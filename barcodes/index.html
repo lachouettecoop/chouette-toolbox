@@ -4,28 +4,31 @@
 <head>
     <title>Code barre livret generator</title>
 
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.5.4/JsBarcode.all.js"></script>
-    
+
     <style type="text/css">
         body {
             background: #fff;
         }
+        h1 {
+            text-align: right;
+        }
         .products {
             page-break-after: always;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: baseline;
-            justify-content: space-around;
         }
         .product {
             text-align:center;
             border: 1px solid #000;
-            margin-top: 1em;
+            margin-top: 0.5em;
             padding: 0.5em;
+            height: 350px;
+            page-break-inside: avoid;
         }
         .product h2 {
-            width: 200px;
+            width: auto;
         }
         .product img {
             max-height: 100px;
@@ -51,7 +54,7 @@
                 var image = product.image
                     ? `<img src="data:image/png;base64,${product.image}" title="${product.name}" />`
                     : ``
-                
+
                 var barcode = `<svg class="barcode"
                     jsbarcode-format="ean${product.barcode.length}"
                     jsbarcode-value="${product.barcode}"
@@ -60,17 +63,21 @@
                 </svg>`
 
                 return `
-                    <div class="product">
-                        <h2>${product.name}</h2>
-                        ${image}
-                        <br>${barcode}
+                    <div class="col-xs-6">
+                        <div class="product">
+                            <h2>${product.name}</h2>
+                            ${image}
+                            <br>${barcode}
+                        </div>
                     </div>`
             }
 
             function displayProductSection(letter, products) {
                 return `<h1>${letter}</h1>
-                    <div class="products">
-                        ${products.map(displayProduct).join("\n")}
+                    <div class="container products">
+                        <div class="row">
+                            ${products.map(displayProduct).join("\n")}
+                        </div>
                     </div>`
             }
 
@@ -115,7 +122,7 @@
                 var fileInputElement = document.getElementById('products')
                 fileInputElement.onchange = handleCsvUpload
             })
-        }//]]> 
+        }//]]>
     </script>
 </head>
 
