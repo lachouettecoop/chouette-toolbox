@@ -84,7 +84,15 @@
             function displayProducts(products) {
                 var productsByLetter = products
                     .filter(function(product) { return product.name })
-                    .filter(function(product) { return product.barcode })
+                    .filter(function(product) {
+                      var start = product.barcode.substr(0, product.barcode.length-11);
+                      console.log(start);
+                      if(start == `20`){
+                        return product.barcode
+                      } else {
+                        return false
+                      }
+                    })
                     .reduce(function(byLetter, product) {
                         var letter = product.name[0]
                         if (!byLetter.hasOwnProperty(letter)) {
