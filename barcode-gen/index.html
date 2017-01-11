@@ -21,7 +21,7 @@
                     document.addEventListener('DOMContentLoaded', fn);
                 }
             }
-            
+
             String.prototype.reverse = function()
             {
                 splitext = this.split("");
@@ -43,22 +43,34 @@
             function displayBarcode() {
                 var base = `20${parseInt(Date.now() / 1000)}`
                 var checksum = checksumOf(base)
-                var barcode = `<svg class="barcode"
+
+                var output = `<table>`
+                var dateJour = parseInt(Date.now() / 1000)
+                for (i = 0; i < 155; i++){
+
+                  var dateGen= dateJour + i
+                  var base = `20${dateGen}`
+                  var checksum = checksumOf(base)
+
+                  var output = output + `
+                  <tr><td>${base}${checksum}</td></tr>
+                  `
+                }
+
+                var output = output + `</table>`
+                /*var barcode = `<svg class="barcode"
                 jsbarcode-format="ean13"
                 jsbarcode-value="${base}${checksum}"
                 jsbarcode-textmargin="0"
                 jsbarcode-fontoptions="bold">
-                </svg>`
+                </svg>`*/
 
-                return `
-                <p>${barcode}</p>
-                <p>${base}${checksum}</p>
-                `
+                return output
             }
 
             ready(function() {
                 document.getElementById('content').innerHTML = displayBarcode()
-                JsBarcode(".barcode").init();
+                //JsBarcode(".barcode").init();
             })
         }//]]>
         </script>

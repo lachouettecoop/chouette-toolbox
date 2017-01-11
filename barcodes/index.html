@@ -21,11 +21,12 @@
         }
         .product {
             text-align:center;
-            border: 1px solid #000;
-            margin-top: 0.5em;
+            margin-top: 0em;
             padding: 0.5em;
-            height: 350px;
+            height: 5.3cm;
+            width: 9.50cm;
             page-break-inside: avoid;
+            font-size: 32px;
         }
         .product h2 {
             width: auto;
@@ -63,17 +64,17 @@
                 </svg>`
 
                 return `
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         <div class="product">
-                            <h2>${product.name}</h2>
-                            ${image}
-                            <br>${barcode}
+                            <h3>${product.name}</h3>
+                            <br>
+                            ${ (product.standard_price*1.2).toFixed(2) } €
                         </div>
                     </div>`
             }
 
             function displayProductSection(letter, products) {
-                return `<h1>${letter}</h1>
+                return `
                     <div class="container products">
                         <div class="row">
                             ${products.map(displayProduct).join("\n")}
